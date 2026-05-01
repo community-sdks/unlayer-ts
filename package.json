@@ -1,0 +1,26 @@
+{
+    "name": "@community-sdks/unlayer-ts",
+    "version": "0.1.0",
+    "description": "Framework-free TypeScript wrapper for the Unlayer editor.",
+    "type": "module",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsup src/index.ts --format esm,cjs --dts",
+        "typecheck": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "tsup": "^8.3.5",
+        "typescript": "^5.7.2"
+    },
+    "keywords": [
+        "unlayer",
+        "email-editor",
+        "template-editor"
+    ],
+    "license": "MIT"
+}
