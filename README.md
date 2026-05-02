@@ -2,6 +2,29 @@
 
 Framework-free TypeScript wrapper for the Unlayer editor.
 
+## Development
+
+Build the package:
+
+```bash
+npm run build
+```
+
+Serve the local examples:
+
+```bash
+npm run examples:serve
+```
+
+Then open one of these pages in the browser:
+
+```txt
+http://127.0.0.1:4173/examples/basic.html
+http://127.0.0.1:4173/examples/http-template-client.html
+```
+
+Do not open the example files with `file://`. Browser module imports from the local filesystem are blocked and the examples are designed to run over HTTP.
+
 ## Getting Started
 
 ```bash
@@ -49,6 +72,12 @@ await editor.mount()
 const templates = await editor.searchTemplates({ search: 'welcome' })
 await editor.loadTemplate(templates[0].slug)
 ```
+
+## Examples
+
+`examples/basic.html` mounts the editor with a local sample design and lets you export the current state.
+
+`examples/http-template-client.html` shows how to wire `HttpTemplateClient` to backend template proxy routes such as `/unlayer-livewire/templates` and `/unlayer-livewire/templates/:slug`.
 
 Stock template search and filtering is built in:
 

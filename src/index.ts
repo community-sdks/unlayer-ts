@@ -521,7 +521,7 @@ export class UnlayerEditor {
         close.type = 'button';
         close.className = 'unlayer-sdk-template-close';
         close.setAttribute('aria-label', 'Close templates');
-        close.textContent = 'x';
+        close.textContent = '×';
         close.addEventListener('click', () => this.closeTemplatePicker());
 
         const searchInput = document.createElement('input');
@@ -811,6 +811,8 @@ function stylesElement(): HTMLStyleElement {
         }
 
         .unlayer-sdk-template-search {
+            display: block;
+            width: calc(100% - 36px);
             margin: 16px 18px 8px;
             min-height: 40px;
             border: 1px solid #d1d5db;
@@ -819,6 +821,17 @@ function stylesElement(): HTMLStyleElement {
             background: #ffffff;
             color: #111827;
             font: inherit;
+            box-sizing: border-box;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .unlayer-sdk-template-search::-webkit-search-decoration,
+        .unlayer-sdk-template-search::-webkit-search-cancel-button,
+        .unlayer-sdk-template-search::-webkit-search-results-button,
+        .unlayer-sdk-template-search::-webkit-search-results-decoration {
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .unlayer-sdk-template-status {

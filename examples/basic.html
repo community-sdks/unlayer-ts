@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zpm-unlayer basic example</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: "Segoe UI", sans-serif;
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #f9fafb 0%, #e5eefc 100%);
+        }
+
+        main {
+            width: min(1200px, calc(100% - 32px));
+            margin: 24px auto;
+            display: grid;
+            gap: 16px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid #d1d5db;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+        }
+
+        .hero {
+            padding: 24px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+            line-height: 1.1;
+        }
+
+        p {
+            margin: 0;
+            color: #4b5563;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 0 24px 24px;
+        }
+
+        button {
+            appearance: none;
+            border: 0;
+            border-radius: 999px;
+            padding: 12px 18px;
+            background: #111827;
+            color: #ffffff;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        button.secondary {
+            background: #2563eb;
+        }
+
+        #editor {
+            height: 720px;
+        }
+
+        .output {
+            padding: 24px;
+        }
+
+        pre {
+            margin: 0;
+            min-height: 200px;
+            max-height: 320px;
+            overflow: auto;
+            border-radius: 12px;
+            background: #0f172a;
+            color: #e5eefc;
+            padding: 16px;
+            font: 13px/1.5 "Cascadia Code", monospace;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section class="card">
+            <div class="hero">
+                <h1>zpm-unlayer basic example</h1>
+                <p>This page imports the local build from <code>../dist/index.js</code>, mounts the editor, and lets you inspect exported HTML and design JSON.</p>
+            </div>
+            <div class="controls">
+                <button id="load-sample" type="button">Load sample design</button>
+                <button class="secondary" id="export-state" type="button">Export current state</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <div id="editor"></div>
+        </section>
+
+        <section class="card output">
+            <pre id="result">Waiting for editor...</pre>
+        </section>
+    </main>
+
+    <script type="module">
+        import UnlayerEditor from '../dist/index.js';
+
+        const result = document.getElementById('result');
+        const loadSampleButton = document.getElementById('load-sample');
+        const exportStateButton = document.getElementById('export-state');
+
+        const sampleDesign = {
+            counters: {
+                u_column: 1,
+                u_row: 1,
+                u_content_heading: 1,
+                u_content_text: 1,
+                u_content_button: 1,
+            },
+            body: {
+                id: 'body',
+                rows: [
+                    {
+                        id: 'row-1',
+                        cells: [1],
+                        columns: [
+                            {
+                                id: 'column-1',
+                                contents: [
+                                    {
+                                        id: 'heading-1',
+                                        type: 'heading',
+                                        values: {
+                                            text: '<h1 style="text-align:center;">Build campaigns faster</h1>',
+                                        },
+                                    },
+                                    {
+                                        id: 'text-1',
+                                        type: 'text',
+                                        values: {
+                                            text: '<p style="text-align:center;">This example was loaded through the zpm-unlayer wrapper.</p>',
+                                        },
+                                    },
+                                    {
+                                        id: 'button-1',
+                                        type: 'button',
+                                        values: {
+                                            text: 'Open dashboard',
+                                            href: 'https://example.com',
+                                            align: 'center',
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+                values: {
+                    backgroundColor: '#f8fafc',
+                    contentWidth: '640px',
+                    fontFamily: {
+                        label: 'Arial',
+                        value: 'arial,helvetica,sans-serif',
+                    },
+                },
+            },
+            schemaVersion: 16,
+        };
+
+        const editor = new UnlayerEditor({
+            id: 'editor',
+            displayMode: 'email',
+            state: {
+                html: '',
+                design: sampleDesign,
+            },
+            templatePicker: {
+                enabled: false,
+            },
+            onReady: async (instance) => {
+                result.textContent = 'Editor ready. Click "Export current state" to inspect the generated output.';
+                await instance.exportState();
+            },
+            onChange: (state) => {
+                result.textContent = JSON.stringify({
+                    html: state.html,
+                    design: state.design,
+                }, null, 2);
+            },
+            onError: (error) => {
+                const message = error instanceof Error ? error.message : String(error);
+                result.textContent = `Error: ${message}`;
+                console.error(error);
+            },
+        });
+
+        loadSampleButton.addEventListener('click', () => {
+            editor.loadDesign(sampleDesign);
+        });
+
+        exportStateButton.addEventListener('click', async () => {
+            const state = await editor.exportState();
+            result.textContent = JSON.stringify(state, null, 2);
+        });
+
+        await editor.mount();
+    </script>
+</body>
+</html>
