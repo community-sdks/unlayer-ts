@@ -1,6 +1,6 @@
 {
     "name": "@community-sdks/unlayer-ts",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Framework-free TypeScript wrapper for the Unlayer editor.",
     "type": "module",
     "main": "dist/index.cjs",
